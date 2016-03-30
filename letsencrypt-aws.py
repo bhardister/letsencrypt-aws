@@ -437,7 +437,12 @@ def update_certificates(persistent=False, force_issue=False):
     if persistent and force_issue:
         raise ValueError("Can't specify both --persistent and --force-issue")
 
-    session = boto3.Session()
+    # EP custom code starts here
+    session = boto3.Session(
+        aws_access_key_id=os.environ['letsEncryptKeyId'],
+        aws_secret_access_key=os.environ['letsEncryptSecretKey'],
+    )
+    # EP custom code ends here
     s3_client = session.client("s3")
     elb_client = session.client("elb")
     route53_client = session.client("route53")
